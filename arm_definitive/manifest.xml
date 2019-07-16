@@ -1,0 +1,14 @@
+<package>
+  <description brief="arm_definitive">
+
+     arm_definitive
+
+  </description>
+  <author>Carlos Viescas</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>https://github.com/youbot/youbot_applications</url>
+  <depend package="youbot_driver"/>
+</package>
+
+

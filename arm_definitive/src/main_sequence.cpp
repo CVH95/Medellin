@@ -1,0 +1,208 @@
+/*
+-----------------------------------------------------------------------------------------------------------
+
+				    DESARROLLO DE PROTOTIPOS 2017
+
+				          Arm control code
+
+					       (API version)
+
+-----------------------------------------------------------------------------------------------------------
+*/
+
+#include "youbot/YouBotManipulator.hpp"
+
+using namespace youbot;
+
+int main() {
+
+	/* configuration flags for different system configuration (e.g. base without arm)*/
+
+	bool youBotHasArm = false;
+
+	/* define velocities */
+	double translationalVelocity = 0.5; //meter_per_second
+	double rotationalVelocity = 0.4; //radian_per_second
+
+	/* create handles for youBot base and manipulator (if available) */
+	YouBotManipulator* myYouBotManipulator = 0;
+
+	try {
+		myYouBotManipulator = new YouBotManipulator("youbot-manipulator", YOUBOT_CONFIGURATIONS_DIR);
+		myYouBotManipulator->doJointCommutation();
+		myYouBotManipulator->calibrateManipulator();
+        myYouBotManipulator->calibrateGripper();
+        
+		youBotHasArm = true;
+	} catch (std::exception& e) {
+		LOG(warning) << e.what();
+		youBotHasArm = false;
+	}
+
+	
+	/* Variable for the arm. */
+	JointAngleSetpoint desiredJointAngle;
+
+	try {
+		/*
+		 * Simple sequence of commands to the youBot:
+		 */
+
+		if (youBotHasArm) {
+
+			
+			 // Open Gripper
+            		GripperBarSpacingSetPoint gripperSetPoint;
+            		gripperSetPoint.barSpacing = 0.02 * meter;
+            		myYouBotManipulator->getArmGripper().setData(gripperSetPoint);
+		    	SLEEP_MILLISEC(2000);            
+		    			 
+            		// POSITION 1			 
+			desiredJointAngle.angle = 1.57 * radian;
+			myYouBotManipulator->getArmJoint(1).setData(desiredJointAngle);
+
+			desiredJointAngle.angle = 1.04883 * radian;
+			myYouBotManipulator->getArmJoint(2).setData(desiredJointAngle);
+
+			desiredJointAngle.angle = -2.43523 * radian;
+			myYouBotManipulator->getArmJoint(3).setData(desiredJointAngle);
+
+			desiredJointAngle.angle = 1.73184 * radian;
+			myYouBotManipulator->getArmJoint(4).setData(desiredJointAngle);
+			
+			desiredJointAngle.angle = 2.765 * radian;
+			myYouBotManipulator->getArmJoint(5).setData(desiredJointAngle);
+
+			LOG(info) << "position_1";
+			SLEEP_MILLISEC(2000);
+
+			// POSITION 2 --- joint_4 descends			 
+			desiredJointAngle.angle = 1.57 * radian;
+			myYouBotManipulator->getArmJoint(1).setData(desiredJointAngle);
+
+			desiredJointAngle.angle = 1.04883 * radian;
+			myYouBotManipulator->getArmJoint(2).setData(desiredJointAngle);
+
+			desiredJointAngle.angle = -2.43523 * radian;
+			myYouBotManipulator->getArmJoint(3).setData(desiredJointAngle);
+
+			desiredJointAngle.angle = 0.13 * radian;
+			myYouBotManipulator->getArmJoint(4).setData(desiredJointAngle);
+			
+			desiredJointAngle.angle = 2.765 * radian;
+			myYouBotManipulator->getArmJoint(5).setData(desiredJointAngle);
+			
+			LOG(info) << "position_2";
+			SLEEP_MILLISEC(2000);
+
+			// close Gripper
+            
+            		gripperSetPoint.barSpacing = 0.01 * meter;
+            		myYouBotManipulator->getArmGripper().setData(gripperSetPoint);
+            		SLEEP_MILLISEC(2000);  
+
+			// POSITION 3			 
+			desiredJointAngle.angle = 0.01008 * radian;
+			myYouBotManipulator->getArmJoint(1).setData(desiredJointAngle);
+
+			desiredJointAngle.angle = 1.04883 * radian;
+			myYouBotManipulator->getArmJoint(2).setData(desiredJointAngle);
+
+			desiredJointAngle.angle = -1.0 * radian;
+			myYouBotManipulator->getArmJoint(3).setData(desiredJointAngle);
+
+			desiredJointAngle.angle = 1.73184 * radian;
+			myYouBotManipulator->getArmJoint(4).setData(desiredJointAngle);
+
+            desiredJointAngle.angle = 2.765 * radian;
+			myYouBotManipulator->getArmJoint(5).setData(desiredJointAngle);
+				
+			LOG(info) << "position_3";
+			SLEEP_MILLISEC(2000);
+			
+			// POSITION 4			 
+			desiredJointAngle.angle = 0.01008 * radian;
+			myYouBotManipulator->getArmJoint(1).setData(desiredJointAngle);
+
+			desiredJointAngle.angle = 1.05 * radian;
+			myYouBotManipulator->getArmJoint(2).setData(desiredJointAngle);
+
+			desiredJointAngle.angle = -1.0 * radian;
+			myYouBotManipulator->getArmJoint(3).setData(desiredJointAngle);
+
+			desiredJointAngle.angle = 3.0 * radian;
+			myYouBotManipulator->getArmJoint(4).setData(desiredJointAngle);
+
+            desiredJointAngle.angle = 2.765 * radian;
+			myYouBotManipulator->getArmJoint(5).setData(desiredJointAngle);
+            
+			LOG(info) << "position_4";
+			SLEEP_MILLISEC(2000);
+
+			// Open Gripper
+            		gripperSetPoint.barSpacing = 0.02 * meter;
+            		myYouBotManipulator->getArmGripper().setData(gripperSetPoint);
+		    	SLEEP_MILLISEC(2000);
+
+			// POSITION 5 --- Arm goes backwards			 
+			desiredJointAngle.angle = 0.01008 * radian;
+			myYouBotManipulator->getArmJoint(1).setData(desiredJointAngle);
+
+			desiredJointAngle.angle = 0.9 * radian;
+			myYouBotManipulator->getArmJoint(2).setData(desiredJointAngle);
+
+			desiredJointAngle.angle = -0.2 * radian;
+			myYouBotManipulator->getArmJoint(3).setData(desiredJointAngle);
+
+			desiredJointAngle.angle = 1.7 * radian;
+			myYouBotManipulator->getArmJoint(4).setData(desiredJointAngle);
+            
+            desiredJointAngle.angle = 2.765 * radian;
+			myYouBotManipulator->getArmJoint(5).setData(desiredJointAngle);
+
+			LOG(info) << "position_5";
+			SLEEP_MILLISEC(2000);
+
+			// close Gripper
+            
+            		gripperSetPoint.barSpacing = 0.0 * meter;
+            		myYouBotManipulator->getArmGripper().setData(gripperSetPoint);
+            		SLEEP_MILLISEC(2000);  
+
+
+			// REST
+			desiredJointAngle.angle = 0.11 * radian;
+			myYouBotManipulator->getArmJoint(1).setData(desiredJointAngle);
+
+			desiredJointAngle.angle = 0.11 * radian;
+			myYouBotManipulator->getArmJoint(2).setData(desiredJointAngle);
+
+			desiredJointAngle.angle = -0.11 * radian;
+			myYouBotManipulator->getArmJoint(3).setData(desiredJointAngle);
+
+			desiredJointAngle.angle = 0.11 * radian;
+			myYouBotManipulator->getArmJoint(4).setData(desiredJointAngle);
+            desiredJointAngle.angle = 0.12 * radian;
+			myYouBotManipulator->getArmJoint(5).setData(desiredJointAngle);
+	
+			LOG(info) << "fold arm";
+			SLEEP_MILLISEC(3000);
+		}
+
+	} catch (std::exception& e) {
+		std::cout << e.what() << std::endl;
+		std::cout << "unhandled exception" << std::endl;
+	}
+
+	/* clean up */
+	
+	if (myYouBotManipulator) {
+		delete myYouBotManipulator;
+		myYouBotManipulator = 0;
+	}
+
+	LOG(info) << "Done.";
+
+	return 0;
+}
+
